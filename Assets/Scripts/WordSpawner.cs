@@ -9,9 +9,19 @@ public class WordSpawner : MonoBehaviour
     //Positions of initial word object, temporal value
     float minX = -3, maxX = 3, initialY = 5;
 
+    IEnumerator temp()
+    {
+        for(int i = 0; i < 70; i++)
+        {
+            yield return new WaitForSeconds(0.1f);
+            Instantiate(wordObject).Initiate("쌀국수", new Vector2(Random.Range(minX, maxX), initialY));
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
-    {    
+    {
+        StartCoroutine(temp());
     }
 
     // Update is called once per frame
