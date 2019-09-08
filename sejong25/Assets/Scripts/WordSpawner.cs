@@ -11,7 +11,7 @@ public class WordSpawner : MonoBehaviour
 
     IEnumerator temp()
     {
-        for(int i = 0; i < 70; i++)
+        for(int i = 0; i < 60; i++)
         {
             yield return new WaitForSeconds(0.1f);
             Instantiate(wordObject).Initiate("쌀국수", new Vector2(Random.Range(minX, maxX), initialY));
