@@ -5,7 +5,7 @@ using UnityEngine;
 public class WordObject : MonoBehaviour
 {
     public string wordText = null; //Text of this word object
-    public float wordGrade, wordWeight;
+    public int wordGrade, wordWeight;
 
     public TextMesh textMesh; //Text field(text mesh) of this word object
 
@@ -20,6 +20,8 @@ public class WordObject : MonoBehaviour
             7 <= wordTyping && wordTyping < 12 ? 2 :
             12 <= wordTyping && wordTyping < 17 ? 1 : 0;
         wordWeight = wordGrade == 3 ? 3 : wordGrade == 2 ? 5 : wordGrade == 1 ? 7 : 10;
+        GetComponent<SpriteRenderer>().sprite = WordSpace.inst.wordBackgrounds[wordGrade, wordText.Length - 2];
+        gameObject.AddComponent<PolygonCollider2D>();
         WordSpace.inst.brainWeight += wordWeight;
         WordSpace.inst.words.Add(this);
     }

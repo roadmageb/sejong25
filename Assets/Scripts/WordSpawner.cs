@@ -24,11 +24,11 @@ public class WordSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Instantiate(wordObject).Initiate("쌀국수", new Vector2(Random.Range(minX, maxX), initialY));
-        Instantiate(wordObject).Initiate("쌀국수", new Vector2(Random.Range(minX, maxX), initialY));
-        Instantiate(wordObject).Initiate("쌀국수", new Vector2(Random.Range(minX, maxX), initialY));
-        Instantiate(wordObject).Initiate("쌀국수", new Vector2(Random.Range(minX, maxX), initialY));
-        Instantiate(wordObject).Initiate("쌀국수", new Vector2(Random.Range(minX, maxX), initialY));
+        Instantiate(wordObject).Initiate("딜딜딜딜딜딜", new Vector2(Random.Range(minX, maxX), initialY));
+        Instantiate(wordObject).Initiate("딜딜딜딜딜", new Vector2(Random.Range(minX, maxX), initialY));
+        Instantiate(wordObject).Initiate("딜딜딜딜", new Vector2(Random.Range(minX, maxX), initialY));
+        Instantiate(wordObject).Initiate("딜딜딜", new Vector2(Random.Range(minX, maxX), initialY));
+        Instantiate(wordObject).Initiate("딜딜", new Vector2(Random.Range(minX, maxX), initialY));
         lastWordCreatedTime = Time.time;
     }
 
