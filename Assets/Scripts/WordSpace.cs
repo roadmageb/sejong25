@@ -5,6 +5,8 @@ using UnityEngine;
 public class WordSpace : SingletonBehaviour<WordSpace>
 {
     public List<WordObject> words;
+
+    public List<string>[] stringWords = new List<string>[3];
     public float brainWeight = 0; //Current weight of brain
     public int TotalWeight = 200; //Total amount of brain weight
     public Sprite[,] wordBackgrounds; //Sprites of word background

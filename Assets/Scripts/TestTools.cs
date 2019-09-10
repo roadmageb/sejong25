@@ -11,6 +11,8 @@ public class TestTools : MonoBehaviour
     public void RemoveWord()
     {
         WordSpace.inst.RemoveWord(inputField.text);
+        inputField.text = "";
+        inputField.ActivateInputField();
     }
 
     // Start is called before the first frame update
