@@ -14,19 +14,16 @@ public class ResourcesLoader : MonoBehaviour
     }
     public static void ParseCSVFile()
     {
-        var csvFile = Resources.Load("KKUTU_word");
-        string[] splitText = csvFile.ToString().Split('\n');
-        Debug.Log(':' + splitText[0] + ':');
-        Debug.Log(splitText[0].Length);
-        Debug.Log(WordReader.GetWordGrade(splitText[0]));
-        for (int i = 0; i < splitText.Length; i++)
+        List<Dictionary<string, object>> data = CSVReader.Read("KKUTU_word");
+        for (int i = 0; i < data.Count; i++)
         {
-            switch (WordReader.GetWordGrade(splitText[i]))
+            var text = data[i]["Text"].ToString();
+            switch (WordReader.GetWordGrade(text))
             {
-                case 0: WordSpace.inst.stringWords[0].Add(splitText[i]); break;
-                case 1: WordSpace.inst.stringWords[1].Add(splitText[i]); break;
-                case 2: WordSpace.inst.stringWords[2].Add(splitText[i]); break;
-                case 3: WordSpace.inst.stringWords[3].Add(splitText[i]); break;
+                case 0: WordSpace.inst.stringWords[0].Add(text); break;
+                case 1: WordSpace.inst.stringWords[1].Add(text); break;
+                case 2: WordSpace.inst.stringWords[2].Add(text); break;
+                case 3: WordSpace.inst.stringWords[3].Add(text); break;
                 default: break;
             }
         }
