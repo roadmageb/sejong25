@@ -8,8 +8,16 @@ public class WordSpace : SingletonBehaviour<WordSpace>
 
     public List<string>[] stringWords = new List<string>[3];
     public float brainWeight = 0; //Current weight of brain
-    public int TotalWeight = 200; //Total amount of brain weight
+    public int maximumWeight = 50; //Max weight of brain
+
     public Sprite[,] wordBackgrounds; //Sprites of word background
+
+    public bool isGameOver = false;
+
+    private float gameOverTime = 5; //Time to game over
+    private Coroutine gameOverTimer = null;
+
+    private bool isGameOverTimerOn = false; //Check if game over timer is on 
 
 
     public void RemoveWord(string wordText)
@@ -24,6 +32,27 @@ public class WordSpace : SingletonBehaviour<WordSpace>
                 return;
             }
         }
+    }
+
+    public IEnumerator GameOverTimer(float startTime)
+    {
+        isGameOverTimerOn = true;
+        while (Time.time - startTime < gameOverTime)
+        {
+            if (brainWeight <= maximumWeight)
+            {
+                isGameOverTimerOn = false;
+                StopCoroutine(gameOverTimer);
+            }
+            yield return null;
+        }
+        GameOver();
+    }
+
+    void GameOver()
+    {
+        isGameOver = true;
+        Debug.Log("Game Over!");
     }
 
     void Awake()
@@ -43,6 +72,9 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     // Update is called once per frame
     void Update()
     {
-        
+        if (!isGameOver)
+        {
+            if (brainWeight > maximumWeight && !isGameOverTimerOn) gameOverTimer = StartCoroutine(GameOverTimer(Time.time));
+        }
     }
 }
