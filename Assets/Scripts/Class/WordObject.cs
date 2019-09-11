@@ -15,10 +15,7 @@ public class WordObject : MonoBehaviour
         wordText = _wordText;
         textMesh.text = wordText;
         transform.position = pos;
-        float wordTyping = WordReader.GetWordTyping(wordText);
-        wordGrade = 4 <= wordTyping && wordTyping < 7 ? 3 :
-            7 <= wordTyping && wordTyping < 12 ? 2 :
-            12 <= wordTyping && wordTyping < 17 ? 1 : 0;
+        wordGrade = WordReader.GetWordGrade(wordText);
         wordWeight = wordGrade == 3 ? 3 : wordGrade == 2 ? 5 : wordGrade == 1 ? 7 : 10;
         GetComponent<SpriteRenderer>().sprite = WordSpace.inst.wordBackgrounds[wordGrade, wordText.Length - 2];
         gameObject.AddComponent<PolygonCollider2D>();
