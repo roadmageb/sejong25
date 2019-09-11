@@ -3,7 +3,6 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
 
-app.use('/js', express.static(__dirname + '/js'));
 app.use('/Build', express.static(__dirname + '/Build'));
 app.use('/TemplateData', express.static(__dirname + '/TemplateData'));
 
@@ -16,12 +15,10 @@ server.listen(80, function() {
 });
 
 io.on('connection', function(socket){
-    socket.on('login', function(){
-        console.log('logined');
-        socket.emit('data', {id:'ping', data:{}});
-    })
+    console.log('logined');
+    socket.emit('data', {id:'myPing', data:JSON.stringify({})});
 
-    socket.on('pong', function(){
-        console.log('pingPong');
+    socket.on('myPong', function(){
+        console.log('PING PONG');
     })
 });
