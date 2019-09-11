@@ -8,7 +8,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
 
     public List<string>[] stringWords;
     public float brainWeight = 0; //Current weight of brain
-    public int maximumWeight = 50; //Max weight of brain
+    public int maximumWeight = 200; //Max weight of brain
 
     public Sprite[,] wordBackgrounds; //Sprites of word background
 

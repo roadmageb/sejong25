@@ -9,13 +9,27 @@ public class WordObject : MonoBehaviour
 
     public TextMesh textMesh; //Text field(text mesh) of this word object
 
+    /// <summary>
+    /// Create word object by word grade
+    /// </summary>
+    /// <param name="_wordGrade">Grade of the word object</param>
+    /// <param name="pos">Initial position of the word object</param>
+    public void Initiate(int _wordGrade, Vector2 pos)
+    {
+        Initiate(WordSpace.inst.stringWords[_wordGrade][Random.Range(0, WordSpace.inst.stringWords[_wordGrade].Count)], pos);
+    }
 
+    /// <summary>
+    /// Create word object by text
+    /// </summary>
+    /// <param name="_wordText">Text of the word object</param>
+    /// <param name="pos">Initial position of the word object</param>
     public void Initiate(string _wordText, Vector2 pos)
     {
         wordText = _wordText;
+        wordGrade = WordReader.GetWordGrade(wordText);
         textMesh.text = wordText;
         transform.position = pos;
-        wordGrade = WordReader.GetWordGrade(wordText);
         wordWeight = wordGrade == 3 ? 3 : wordGrade == 2 ? 5 : wordGrade == 1 ? 7 : 10;
         GetComponent<SpriteRenderer>().sprite = WordSpace.inst.wordBackgrounds[wordGrade, wordText.Length - 2];
         gameObject.AddComponent<PolygonCollider2D>();
