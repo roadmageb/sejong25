@@ -6,16 +6,22 @@ public class WordReader
 {
     public static int GetWordGrade(string words)
     {
-        float wordTyping = 0;
         if (words.Length < 2 || words.Length > 6) return -1;
+        float wordTyping = GetWordTyping(words);
+        return 4 <= wordTyping && wordTyping < 7 ? 3 :
+                7 <= wordTyping && wordTyping < 12 ? 2 :
+                12 <= wordTyping && wordTyping < 17 ? 1 : 0;
+    }
+
+    public static float GetWordTyping(string words)
+    {
+        float wordTyping = 0;
         for (int i = 0; i < words.Length; i++)
         {
             if (words[i] < '가' || words[i] > '힣') return -1;
             wordTyping += GetFirstWord(words[i]) + GetMiddleWord(words[i]) + GetLastWord(words[i]);
         }
-        return 4 <= wordTyping && wordTyping < 7 ? 3 :
-                7 <= wordTyping && wordTyping < 12 ? 2 :
-                12 <= wordTyping && wordTyping < 17 ? 1 : 0;
+        return wordTyping;
     }
     public static float GetFirstWord(char word)
     {

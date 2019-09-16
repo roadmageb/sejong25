@@ -18,6 +18,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     private Coroutine gameOverTimer = null;
 
     private bool isGameOverTimerOn = false; //Check if game over timer is on 
+    public float totalTyping = 0, playerTyping = 0;
 
 
     public void RemoveWord(string wordText)
@@ -26,6 +27,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         {
             if (child.wordText == wordText)
             {
+                totalTyping += (WordReader.GetWordTyping(child.wordText) + 1);
                 words.Remove(child);
                 brainWeight -= child.wordWeight;
                 Destroy(child.gameObject);
@@ -67,6 +69,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     // Update is called once per frame
@@ -75,6 +78,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         if (!isGameOver)
         {
             if (brainWeight > maximumWeight && !isGameOverTimerOn) gameOverTimer = StartCoroutine(GameOverTimer(Time.time));
+            //playerTyping = totalTyping / Time.time;
         }
     }
 }
