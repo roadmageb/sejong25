@@ -30,7 +30,7 @@ public class WordSpawner : MonoBehaviour
         {
             if ((WordSpace.inst.words.Count < 5) || (Time.time - lastWordCreatedTime > wordSpawnDelay))
             {
-                Instantiate(wordObject).Initiate(3, new Vector2(Random.Range(minX, maxX), initialY));
+                Instantiate(wordObject).Initiate(Random.Range(0, 4), new Vector2(Random.Range(minX, maxX), initialY));
                 lastWordCreatedTime = Time.time;
             }
         }
