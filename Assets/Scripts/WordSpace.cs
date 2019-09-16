@@ -18,7 +18,9 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     private Coroutine gameOverTimer = null;
 
     private bool isGameOverTimerOn = false; //Check if game over timer is on 
-    public float totalTyping = 0, playerTyping = 0;
+    public float totalTyping = 0, playerTyping = 0; //Total wordTyping / WordTyping per seconds
+    public float playerTypingRate = 0;
+    public PhaseEnum currentPhase; //Information of current phase.
 
 
     public void RemoveWord(string wordText)
@@ -63,6 +65,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         wordBackgrounds = new Sprite[4, 5];
         stringWords = new List<string>[4];
         for (int i = 0; i < 4; i++) stringWords[i] = new List<string>();
+        currentPhase = PhaseEnum.Start;
         ResourcesLoader.ParseCSVFile();
         ResourcesLoader.LoadImages();
     }
@@ -79,6 +82,11 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         {
             if (brainWeight > maximumWeight && !isGameOverTimerOn) gameOverTimer = StartCoroutine(GameOverTimer(Time.time));
             playerTyping = totalTyping / Time.time * 60;
+
+            //Need to be fixed when server is done, minPlayerTyping is set to 0 and maxPlayerTyping is your playerTyping.
+            //playerTypingRate = (playerTyping - (MinPlayerTyping - currentPhase.rateArrangePoint)) / (MaxPlayerTyping - MinPlayerTyping + currentPhase.rateArrangePoint * 2);
+            playerTypingRate = (playerTyping - (0 - PhaseInfo.RateArrangePoint(currentPhase))) / (playerTyping - 0 + PhaseInfo.RateArrangePoint(currentPhase) * 2);
+
         }
     }
 }

@@ -14,11 +14,12 @@ public class WordSpawner : MonoBehaviour
 
     int GetRandomGrade()
     {
-        int randomGrade = 0;
+        int randomGrade;
         float temp = Random.value;
-        if (temp < 0.4f) randomGrade = 3;
-        else if (temp < 0.8f) randomGrade = 2;
-        else if (temp < 1) randomGrade = 1;
+        if (temp < PhaseInfo.GradeProb(WordSpace.inst.currentPhase, 0)) randomGrade = 3;
+        else if (temp < PhaseInfo.GradeProb(WordSpace.inst.currentPhase, 1)) randomGrade = 2;
+        else if (temp < PhaseInfo.GradeProb(WordSpace.inst.currentPhase, 2)) randomGrade = 1;
+        else randomGrade = 0;
         return randomGrade;
     }
 

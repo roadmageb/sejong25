@@ -1,1 +1,1 @@
-﻿
+﻿public enum PhaseEnum { Start, Main, Finale}
