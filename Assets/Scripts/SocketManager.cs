@@ -27,12 +27,12 @@ public class SocketManager : SingletonBehaviour<SocketManager>
         // example of using onReceieve
         onReceieve += (string id, JObject data) =>
         {
-            if (id == "myPing")
+            if (id == "myPong")
             {
                 Debug.Log(id + ": " + data.ToString());
-                SendData("myPong", emptyObj);
             }
         };
+        SendData("myPing", emptyObj);
     }
 
     public void SendData(string id, JObject data)
@@ -44,6 +44,7 @@ public class SocketManager : SingletonBehaviour<SocketManager>
     public void OnReceieve(string value)
     {
         JObject recieved = JObject.Parse(value);
+        Debug.Log(recieved["id"].ToString() + recieved["data"].ToString());
         onReceieve(recieved["id"].ToString(), JObject.Parse(recieved["data"].ToString()));
     }
 }

@@ -1,14 +1,9 @@
 mergeInto(LibraryManager.library, {
     _ConnectServer: function() {
-        try{
-            window.socket = io.connect();
-            socket.on('data', function(msg){
-                unityInstance.SendMessage('SocketIO', 'OnReceive', JSON.stringify(msg));
-            });
-        }
-        catch(e){
-            console.error('failed connect');
-        }
+        window.socket = io.connect();
+        socket.on('data', function(msg){
+            unityInstance.SendMessage('SocketIO', 'OnReceive', JSON.stringify(msg));
+        });
     },
 
     _SendData: function(id, data) {

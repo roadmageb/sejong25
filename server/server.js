@@ -11,14 +11,14 @@ app.get('/', function(req, res) {
 });
 
 server.listen(80, function() {
-    console.log(new Date().toLocaleTimeString('ko-KR') + ' [SERVER] Listening on port ' + server.address().port);
+    console.log('[SERVER] Listening on port ' + server.address().port);
 });
 
 io.on('connection', function(socket){
-    console.log('logined');
-    socket.emit('data', {id:'myPing', data:JSON.stringify({})});
+    console.log('someone login');
 
-    socket.on('myPong', function(){
-        console.log('PING PONG');
+    socket.on('myPing', function(){
+        socket.emit('myPong');
+        console.log('PING PONG Done');
     })
 });
