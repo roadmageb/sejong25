@@ -6,9 +6,9 @@ public class WordSpace : SingletonBehaviour<WordSpace>
 {
     public List<WordObject> words;
 
-    public List<string>[] stringWords = new List<string>[3];
+    public List<string>[] stringWords;
     public float brainWeight = 0; //Current weight of brain
-    public int maximumWeight = 50; //Max weight of brain
+    public int maximumWeight = 200; //Max weight of brain
 
     public Sprite[,] wordBackgrounds; //Sprites of word background
 
@@ -18,6 +18,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     private Coroutine gameOverTimer = null;
 
     private bool isGameOverTimerOn = false; //Check if game over timer is on 
+    public float totalTyping = 0, playerTyping = 0;
 
 
     public void RemoveWord(string wordText)
@@ -26,6 +27,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         {
             if (child.wordText == wordText)
             {
+                totalTyping += (WordReader.GetWordTyping(child.wordText) + 1);
                 words.Remove(child);
                 brainWeight -= child.wordWeight;
                 Destroy(child.gameObject);
@@ -59,14 +61,15 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     {
         words = new List<WordObject>();
         wordBackgrounds = new Sprite[4, 5];
-
-        for (int grade = 0; grade < 4; grade++)
-            for (int length = 0; length < 5; length++)
-                wordBackgrounds[grade, length] = Resources.Load<Sprite>("WordBackgrounds/" + grade + "_" + (length + 2));
+        stringWords = new List<string>[4];
+        for (int i = 0; i < 4; i++) stringWords[i] = new List<string>();
+        ResourcesLoader.ParseCSVFile();
+        ResourcesLoader.LoadImages();
     }
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     // Update is called once per frame
@@ -75,6 +78,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         if (!isGameOver)
         {
             if (brainWeight > maximumWeight && !isGameOverTimerOn) gameOverTimer = StartCoroutine(GameOverTimer(Time.time));
+            playerTyping = totalTyping / Time.time * 60;
         }
     }
 }

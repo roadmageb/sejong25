@@ -1,10 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Text;
 
 public class WordReader
 {
+    public static int GetWordGrade(string words)
+    {
+        if (words.Length < 2 || words.Length > 6) return -1;
+        float wordTyping = GetWordTyping(words);
+        return 4 <= wordTyping && wordTyping < 7 ? 3 :
+                7 <= wordTyping && wordTyping < 12 ? 2 :
+                12 <= wordTyping && wordTyping < 17 ? 1 : 0;
+    }
+
+    public static float GetWordTyping(string words)
+    {
+        float wordTyping = 0;
+        for (int i = 0; i < words.Length; i++)
+        {
+            if (words[i] < '가' || words[i] > '힣') return -1;
+            wordTyping += GetFirstWord(words[i]) + GetMiddleWord(words[i]) + GetLastWord(words[i]);
+        }
+        return wordTyping;
+    }
     public static float GetFirstWord(char word)
     {
         int wordCode = (word - '가') / 28 / 21;
@@ -32,14 +50,4 @@ public class WordReader
             wordCode == 18) return 2;
         else return 1;
     }
-    public static float GetWordTyping(string words)
-    {
-        float wordTyping = 0;
-        for (int i = 0; i < words.Length; i++)
-        {
-            wordTyping += GetFirstWord(words[i]) + GetMiddleWord(words[i]) + GetLastWord(words[i]);
-        }
-        return wordTyping;
-    }
-
 }
