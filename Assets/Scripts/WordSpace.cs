@@ -78,7 +78,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         if (!isGameOver)
         {
             if (brainWeight > maximumWeight && !isGameOverTimerOn) gameOverTimer = StartCoroutine(GameOverTimer(Time.time));
-            //playerTyping = totalTyping / Time.time;
+            playerTyping = totalTyping / Time.time * 60;
         }
     }
 }
