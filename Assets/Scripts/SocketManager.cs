@@ -29,7 +29,7 @@ public class SocketManager : SingletonBehaviour<SocketManager>
         {
             if (id == "myPong")
             {
-                Debug.Log(id + ": " + data.ToString());
+                Debug.Log("HandShake done, Connected");
             }
         };
         SendData("myPing", emptyObj);
@@ -44,7 +44,7 @@ public class SocketManager : SingletonBehaviour<SocketManager>
     public void OnReceieve(string value)
     {
         JObject recieved = JObject.Parse(value);
-        Debug.Log(recieved["id"].ToString() + recieved["data"].ToString());
+        //Debug.Log(recieved["id"].ToString() + recieved["data"].ToString());
         onReceieve(recieved["id"].ToString(), JObject.Parse(recieved["data"].ToString()));
     }
 }
