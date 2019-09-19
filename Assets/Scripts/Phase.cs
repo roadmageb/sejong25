@@ -13,6 +13,49 @@ public class PhaseInfo
             default: return 0;
         }
     }
+    public static int AttackGuageAmount(PhaseEnum phase)
+    {
+        switch (phase)
+        {
+            case PhaseEnum.Start: return 20;
+            case PhaseEnum.Main: return 15;
+            case PhaseEnum.Finale: return 10;
+            default: return 0;
+        }
+    }
+
+    public static float WordSpawnDelay(PhaseEnum phase)
+    {
+        switch (phase)
+        {
+            case PhaseEnum.Start: return 2;
+            case PhaseEnum.Main: return 2.5f - WordSpace.inst.playerTypingRate;
+            case PhaseEnum.Finale: return 1;
+            default: return 0;
+        }
+    }
+
+    public static float NameSpawnDelay(PhaseEnum phase)
+    {
+        switch (phase)
+        {
+            case PhaseEnum.Start: return 15;
+            case PhaseEnum.Main: return 12;
+            case PhaseEnum.Finale: return 8;
+            default: return 0;
+        }
+    }
+    public static float NameSpawnReduce(PhaseEnum phase)
+    {
+        switch (phase)
+        {
+            case PhaseEnum.Start: return 1;
+            case PhaseEnum.Main: return 1;
+            case PhaseEnum.Finale: return 0.4f;
+            default: return 0;
+        }
+    }
+
     public static float GradeProb(PhaseEnum phase, int gradeProbIndex)
     {
         float gradeProb = 0;

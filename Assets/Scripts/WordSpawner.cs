@@ -6,7 +6,7 @@ public class WordSpawner : MonoBehaviour
 {
     public WordObject wordObject;
 
-    float wordSpawnDelay = 5, nameSpawnDelay = 5; //Words spawn delay
+    float wordSpawnDelay = 5;//Words spawn delay
     float lastWordCreatedTime;
 
     //Positions of initial word object, temporal value
@@ -39,7 +39,7 @@ public class WordSpawner : MonoBehaviour
     {
         if(!WordSpace.inst.isGameOver)
         {
-            if ((WordSpace.inst.words.Count < 5) || (Time.time - lastWordCreatedTime > wordSpawnDelay))
+            if ((WordSpace.inst.words.Count < 5) || (Time.time - lastWordCreatedTime > PhaseInfo.WordSpawnDelay(WordSpace.inst.currentPhase)))
             {
                 Instantiate(wordObject).Initiate(GetRandomGrade(), new Vector2(Random.Range(minX, maxX), initialY));
                 lastWordCreatedTime = Time.time;
