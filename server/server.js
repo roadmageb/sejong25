@@ -3,7 +3,6 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
 
-app.use('/js', express.static(__dirname + '/js'));
 app.use('/Build', express.static(__dirname + '/Build'));
 app.use('/TemplateData', express.static(__dirname + '/TemplateData'));
 
@@ -12,16 +11,14 @@ app.get('/', function(req, res) {
 });
 
 server.listen(80, function() {
-    console.log(new Date().toLocaleTimeString('ko-KR') + ' [SERVER] Listening on port ' + server.address().port);
+    console.log('[SERVER] Listening on port ' + server.address().port);
 });
 
 io.on('connection', function(socket){
-    socket.on('login', function(){
-        console.log('logined');
-        socket.emit('data', {id:'ping', data:{}});
-    })
+    console.log('someone login');
 
-    socket.on('pong', function(){
-        console.log('pingPong');
+    socket.on('myPing', function(){
+        socket.emit('myPong');
+        console.log('PING PONG Done');
     })
 });
