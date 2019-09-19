@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class TestTools : MonoBehaviour
 {
     public InputField inputField;
-    public Text brainWeight;
+    public Text brainWeightText;
+    public Text playerTypingText;
 
     public void RemoveWord()
     {
@@ -18,12 +19,13 @@ public class TestTools : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        brainWeight.text = "현재 무게 : " + WordSpace.inst.brainWeight;
+        brainWeightText.text = "현재 무게 : " + WordSpace.inst.brainWeight;
+        playerTypingText.text = "현재 타수 : " + WordSpace.inst.playerTyping;
     }
 }
