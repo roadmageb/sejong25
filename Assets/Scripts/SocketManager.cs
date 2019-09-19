@@ -11,15 +11,23 @@ public class SocketManager : SingletonBehaviour<SocketManager>
 
     public JObject emptyObj = new JObject();
 
+#if UNITY_EDITOR
+    public string url = "http://127.0.0.1/";
+#elif UNITY_WEBGL
     [DllImport("__Internal")]
     private static extern void _SendData(string id, string data);
     [DllImport("__Internal")]
     private static extern void _ConnectServer();
+#endif
 
     private void Awake()
     {
         DontDestroyOnLoad(this);
+#if UNITY_EDITOR
+        // TODO: socket connect
+#elif UNITY_WEBGL
         _ConnectServer();
+#endif
     }
 
     private void Start()
@@ -38,7 +46,11 @@ public class SocketManager : SingletonBehaviour<SocketManager>
     public void SendData(string id, JObject data)
     {
         string strData = data.ToString();
+#if UNITY_EDITOR
+        // TODO: socket emit
+#elif UNITY_WEBGL
         _SendData(id, strData);
+#endif
     }
 
     public void OnReceieve(string value)
