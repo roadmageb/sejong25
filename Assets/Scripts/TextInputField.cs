@@ -5,17 +5,40 @@ using UnityEngine.UI;
 
 public class TextInputField : MonoBehaviour
 {
-    public InputField inputField = null;
-    public TextMesh resultText = null;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        inputField.characterLimit = 6;
+
     }
-    char temp = '0';
-    List<char> tempList = new List<char>();
+    char temp = '\0';
+    public List<char> tempList = new List<char>();
     bool isShifted = false;
+
+    public string combinedWord = "";
+
+    string CombineInput(string tempInput)
+    {
+        string combinedInput = "";
+        char previousVowel = '\0';
+        for(int i = 0; i < tempInput.Length; i++)
+        {
+            if(tempInput[i] >= 'ㄱ' && tempInput[i] <= 'ㅎ')
+            {
+                combinedInput += tempInput[i];
+            }
+            if (tempInput[i] >= 'ㅏ' && tempInput[i] <= 'ㅣ')
+            {
+                if (previousVowel == '\0') previousVowel = tempInput[i];
+                else
+                {
+
+                }
+            }
+        }
+        return combinedInput;
+    }
 
     // Update is called once per frame
     void Update()
@@ -31,6 +54,7 @@ public class TextInputField : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Y)) temp = 'ㅛ'; else if (Input.GetKeyDown(KeyCode.Z)) temp = 'ㅋ';
         if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) isShifted = true;
         else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)) isShifted = false;
+        if (Input.GetKeyDown(KeyCode.Backspace)) tempList.RemoveAt(tempList.Count - 1);
         if (isShifted)
         {
             switch (temp)
@@ -45,16 +69,11 @@ public class TextInputField : MonoBehaviour
                 default: break;
             }
         }
-        if (temp != '0')
+        if (temp != '\0')
         {
             tempList.Add(temp);
-            temp = '0';
+            temp = '\0';
         }
-        string debugText = "";
-        for (int i = 0; i < tempList.Count; i++)
-        {
-            debugText += tempList[i];
-        }
-        Debug.Log(debugText);
+
     }
 }
