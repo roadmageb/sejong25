@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using UnityEngine;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json.Linq;
@@ -12,7 +14,8 @@ public class SocketManager : SingletonBehaviour<SocketManager>
     public JObject emptyObj = new JObject();
 
 #if UNITY_EDITOR
-    public string url = "http://127.0.0.1/";
+    public string url = "ws://127.0.0.1/";
+    public ClientWebSocket socket;
 #elif UNITY_WEBGL
     [DllImport("__Internal")]
     private static extern void _SendData(string id, string data);
@@ -25,6 +28,9 @@ public class SocketManager : SingletonBehaviour<SocketManager>
         DontDestroyOnLoad(this);
 #if UNITY_EDITOR
         // TODO: socket connect
+        var uri = new Uri(url);
+        socket = new ClientWebSocket();
+        socket.ConnectAsync(uri, new System.Threading.CancellationToken(false));
 #elif UNITY_WEBGL
         _ConnectServer();
 #endif
