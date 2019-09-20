@@ -27,7 +27,7 @@ public class WordObject : MonoBehaviour
     public void Initiate(string _wordText, Vector2 pos)
     {
         wordText = _wordText;
-        wordGrade = WordReader.GetWordGrade(wordText);
+        wordGrade = WordProcessor.GetWordGrade(wordText);
         textMesh.text = wordText;
         transform.position = pos;
         wordWeight = wordGrade == 3 ? 3 : wordGrade == 2 ? 5 : wordGrade == 1 ? 7 : 10;

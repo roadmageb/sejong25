@@ -29,7 +29,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         {
             if (child.wordText == wordText)
             {
-                totalTyping += (WordReader.GetWordTyping(child.wordText) + 1);
+                totalTyping += (WordProcessor.GetWordTyping(child.wordText) + 1);
                 words.Remove(child);
                 brainWeight -= child.wordWeight;
                 Destroy(child.gameObject);
