@@ -1,7 +1,9 @@
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
-var io = require('socket.io').listen(server);
+var io = require('socket.io')({
+    transports: ['websocket']
+}).listen(server);
 
 app.use('/Build', express.static(__dirname + '/Build'));
 app.use('/TemplateData', express.static(__dirname + '/TemplateData'));
@@ -17,8 +19,11 @@ server.listen(80, function() {
 io.on('connection', function(socket){
     console.log('someone login');
 
-    socket.on('myPing', function(){
-        socket.emit('myPong');
-        console.log('PING PONG Done');
-    })
+    socket.on('myPing', function(data){
+        console.log('sendPong', data);
+        socket.emit('myPong', { str: "hello world" });
+    });
+    socket.on('myPong', function(data){
+        console.log('PING PONG Done', data);
+    });
 });

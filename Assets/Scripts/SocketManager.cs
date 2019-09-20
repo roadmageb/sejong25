@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.WebSockets;
 using UnityEngine;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json.Linq;
+#if UNITY_EDITOR
+using SocketIO;
+#endif
 
 public class SocketManager : SingletonBehaviour<SocketManager>
 {
-    public delegate void callback(string id, JObject data);
-    public callback onReceieve = new callback((string id, JObject data) => { Debug.Log("recieve " + id); });
+    public delegate void Callback(string id, JObject data);
+    private Callback onReceieve = new Callback((string id, JObject data) => { Debug.Log("receieve " + id); });
 
     public JObject emptyObj = new JObject();
 
 #if UNITY_EDITOR
-    public string url = "ws://127.0.0.1/";
-    public ClientWebSocket socket;
+    [SerializeField]
+    private SocketIOComponent socket;
 #elif UNITY_WEBGL
     [DllImport("__Internal")]
     private static extern void _SendData(string id, string data);
@@ -28,9 +30,7 @@ public class SocketManager : SingletonBehaviour<SocketManager>
         DontDestroyOnLoad(this);
 #if UNITY_EDITOR
         // TODO: socket connect
-        var uri = new Uri(url);
-        socket = new ClientWebSocket();
-        socket.ConnectAsync(uri, new System.Threading.CancellationToken(false));
+        socket.enabled = true;
 #elif UNITY_WEBGL
         _ConnectServer();
 #endif
@@ -39,13 +39,20 @@ public class SocketManager : SingletonBehaviour<SocketManager>
     private void Start()
     {
         // example of using onReceieve
-        onReceieve += (string id, JObject data) =>
+        StartCoroutine(PingPongExample());
+    }
+
+    IEnumerator PingPongExample()
+    {
+        yield return new WaitForSeconds(1);
+        AttachOnCallback("myPong", (string id, JObject data) =>
         {
             if (id == "myPong")
             {
-                Debug.Log("HandShake done, Connected");
+                Debug.Log("HandShake done, Connected, " + data["str"]);
             }
-        };
+            SendData("myPong", emptyObj);
+        });
         SendData("myPing", emptyObj);
     }
 
@@ -54,8 +61,26 @@ public class SocketManager : SingletonBehaviour<SocketManager>
         string strData = data.ToString();
 #if UNITY_EDITOR
         // TODO: socket emit
+        socket.Emit(id, new JSONObject(data.ToString()));
 #elif UNITY_WEBGL
         _SendData(id, strData);
+#endif
+    }
+
+    public void AttachOnCallback(string id, Callback cb)
+    {
+#if UNITY_EDITOR
+        socket.On(id, (SocketIOEvent e) =>
+        {
+            Debug.Log(e.name + " receieved, " + (e.data == null));
+            //JObject receieve = new JObject();
+            //receieve.Add("str", e.data.ToString());
+            //JObject data = (e.data == null ? emptyObj : receieve);
+            //Debug.Log(data.ToString());
+            //cb(e.name, data);
+        });
+#elif UNITY_WEBGL
+        onReceieve += cb;
 #endif
     }
 
