@@ -10,8 +10,8 @@ using SocketIO;
 
 public class SocketManager : SingletonBehaviour<SocketManager>
 {
-    public delegate void Callback(string id, JObject data);
-    private Callback onReceieve = new Callback((string id, JObject data) => { Debug.Log("receieve " + id); });
+    public delegate void Callback(JObject data);
+    private Dictionary<string, Callback> onReceieve = new Dictionary<string, Callback>();
 
     public JObject emptyObj = new JObject();
 
@@ -29,7 +29,6 @@ public class SocketManager : SingletonBehaviour<SocketManager>
     {
         DontDestroyOnLoad(this);
 #if UNITY_EDITOR
-        // TODO: socket connect
         socket.enabled = true;
 #elif UNITY_WEBGL
         _ConnectServer();
@@ -38,56 +37,49 @@ public class SocketManager : SingletonBehaviour<SocketManager>
 
     private void Start()
     {
-        // example of using onReceieve
         StartCoroutine(PingPongExample());
     }
 
+    // example of using onReceieve
     IEnumerator PingPongExample()
     {
         yield return new WaitForSeconds(1);
-        AttachOnCallback("myPong", (string id, JObject data) =>
+        SocketOn("myPong", (JObject data) =>
         {
-            if (id == "myPong")
-            {
-                Debug.Log("HandShake done, Connected, " + data["str"]);
-            }
-            SendData("myPong", emptyObj);
+            Debug.Log("HandShake done, Connected, " + data["hello"].ToString());
+            SocketEmit("myPong", JObject.Parse("{ res: \"Hello Server!\" }"));
         });
-        SendData("myPing", emptyObj);
+        SocketEmit("myPing", emptyObj);
     }
 
-    public void SendData(string id, JObject data)
+    public void SocketEmit(string id, JObject data)
     {
         string strData = data.ToString();
 #if UNITY_EDITOR
-        // TODO: socket emit
-        socket.Emit(id, new JSONObject(data.ToString()));
+        socket.Emit(id, new JSONObject(strData));
+        Debug.Log("emit: " + id);
 #elif UNITY_WEBGL
         _SendData(id, strData);
 #endif
     }
 
-    public void AttachOnCallback(string id, Callback cb)
+    public void SocketOn(string id, Callback cb)
     {
 #if UNITY_EDITOR
-        socket.On(id, (SocketIOEvent e) =>
+        socket.On("data", (SocketIOEvent e) =>
         {
-            Debug.Log(e.name + " receieved, " + (e.data == null));
-            //JObject receieve = new JObject();
-            //receieve.Add("str", e.data.ToString());
-            //JObject data = (e.data == null ? emptyObj : receieve);
-            //Debug.Log(data.ToString());
-            //cb(e.name, data);
+            Debug.Log("receive: " + e.data.GetField("id").str);
+            cb(JObject.Parse(e.data.GetField("data").ToString()));
         });
 #elif UNITY_WEBGL
-        onReceieve += cb;
+        onReceieve.Add(id, cb);
 #endif
     }
 
-    public void OnReceieve(string value)
+    public void OnReceive(string value)
     {
-        JObject recieved = JObject.Parse(value);
+        JObject received = JObject.Parse(value);
         //Debug.Log(recieved["id"].ToString() + recieved["data"].ToString());
-        onReceieve(recieved["id"].ToString(), JObject.Parse(recieved["data"].ToString()));
+        onReceieve[received["id"].ToString()](JObject.Parse(received["data"].ToString()));
     }
 }
