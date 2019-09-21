@@ -5,11 +5,21 @@ using UnityEngine.UI;
 
 public class TextInputField : MonoBehaviour
 {
+
+    public delegate void Callback();
+    private Callback EnterCallback = null;
+
     public TextMesh inputText;
     char tempWord = '0';
     List<char> rawInput = new List<char>();
     bool isShifted = false;
-    string combinedInput = "";
+    public string combinedInput = "";
+
+    public void CreateTextInputField(Callback _enterCallback)
+    {
+        EnterCallback = _enterCallback;
+        return;
+    }
 
     char CombinedWord(char a, char b) //Combine if vowel or consonant is combinable or return 0
     {
@@ -111,6 +121,11 @@ public class TextInputField : MonoBehaviour
         inputText.text = combinedInput;
     }
 
+    private void Start()
+    {
+        //CreateTextInputField(WordSpace.inst.RemoveWord(combinedInput));
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -129,7 +144,8 @@ public class TextInputField : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             //Make it callback
-            WordSpace.inst.RemoveWord(combinedInput);
+            //WordSpace.inst.RemoveWord(combinedInput);
+            EnterCallback();
 
             combinedInput = "";
             rawInput.Clear();
