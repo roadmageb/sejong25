@@ -72,7 +72,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     // Start is called before the first frame update
     void Start()
     {
-
+        GameObject.Find("TextInputField").GetComponent<TextInputField>().CreateTextInputField(() => { RemoveWord(GameObject.Find("TextInputField").GetComponent<TextInputField>().combinedInput); });
     }
 
     // Update is called once per frame

@@ -5,15 +5,17 @@ using UnityEngine.UI;
 
 public class TextInputField : MonoBehaviour
 {
-
     public delegate void Callback();
     private Callback EnterCallback = null;
 
     public TextMesh inputText;
-    char tempWord = '0';
-    List<char> rawInput = new List<char>();
+    char tempWord = '0'; //Character of input
+    List<char> rawInput = new List<char>(); //List of characters from input, not combined
     bool isShifted = false;
-    public string combinedInput = "";
+    public string combinedInput = ""; //Result of combined input
+
+    bool isBackspacePressed = false; //Is backskpace is pressed
+    float previousRemovedTime = -1, removeDiff = 1; //Time diff of removing
 
     public void CreateTextInputField(Callback _enterCallback)
     {
@@ -121,11 +123,6 @@ public class TextInputField : MonoBehaviour
         inputText.text = combinedInput;
     }
 
-    private void Start()
-    {
-        //CreateTextInputField(WordSpace.inst.RemoveWord(combinedInput));
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -143,31 +140,40 @@ public class TextInputField : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            //Make it callback
-            //WordSpace.inst.RemoveWord(combinedInput);
             EnterCallback();
-
             combinedInput = "";
             rawInput.Clear();
             inputText.text = "";
         }
-        if (Input.GetKeyDown(KeyCode.Backspace) && combinedInput.Length > 0)
+        if (Input.GetKey(KeyCode.Backspace) && combinedInput.Length > 0)
         {
-            if (rawInput.Count == 0)
+            if ((isBackspacePressed && Time.time - previousRemovedTime > removeDiff) || !isBackspacePressed)
             {
-                combinedInput = combinedInput.Substring(0, combinedInput.Length - 1);
-                inputText.text = combinedInput;
-            }
-            else
-            {
-                rawInput.RemoveAt(rawInput.Count - 1);
-                if(rawInput.Count == 0)
+                if (rawInput.Count == 0)
                 {
                     combinedInput = combinedInput.Substring(0, combinedInput.Length - 1);
                     inputText.text = combinedInput;
                 }
-                else CombineInput();
+                else
+                {
+                    rawInput.RemoveAt(rawInput.Count - 1);
+                    if (rawInput.Count == 0)
+                    {
+                        combinedInput = combinedInput.Substring(0, combinedInput.Length - 1);
+                        inputText.text = combinedInput;
+                    }
+                    else CombineInput();
+                }
+                removeDiff = isBackspacePressed ? 0.02f : 0.5f;
+                previousRemovedTime = Time.time;
             }
+            isBackspacePressed = true;
+        }
+        if(Input.GetKeyUp(KeyCode.Backspace))
+        {
+            isBackspacePressed = false;
+            removeDiff = 0.5f;
+            previousRemovedTime = -1;
         }
         if (isShifted)
         {
