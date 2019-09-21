@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class WordSpace : SingletonBehaviour<WordSpace>
 {
+    [Header("Prefabs")]
+    public TextInputField textInputField;
+    [Header("Instances")]
     public List<WordObject> words;
+    public TextInputField currentInput;
 
     public List<string>[] stringWords;
     public float brainWeight = 0; //Current weight of brain
@@ -21,6 +25,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     public float totalTyping = 0, playerTyping = 0; //Total wordTyping / WordTyping per seconds
     public float playerTypingRate = 0;
     public PhaseEnum currentPhase; //Information of current phase.
+    public string koreanInput = "";
 
 
     public void RemoveWord(string wordText)
@@ -36,6 +41,14 @@ public class WordSpace : SingletonBehaviour<WordSpace>
                 return;
             }
         }
+    }
+
+    public void CreateTextInputField(TextInputField.Callback _enterCallback, Vector2 pos)
+    {
+        TextInputField temp = Instantiate(textInputField);
+        temp.transform.position = pos;
+        temp.SetCallback(_enterCallback);
+        currentInput = temp;
     }
 
     public IEnumerator GameOverTimer(float startTime)
@@ -72,7 +85,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     // Start is called before the first frame update
     void Start()
     {
-        GameObject.Find("TextInputField").GetComponent<TextInputField>().CreateTextInputField(() => { RemoveWord(GameObject.Find("TextInputField").GetComponent<TextInputField>().combinedInput); });
+        CreateTextInputField(() => { RemoveWord(koreanInput); }, new Vector2(0, -4));
     }
 
     // Update is called once per frame

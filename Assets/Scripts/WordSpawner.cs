@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WordSpawner : MonoBehaviour
 {
+    [Header("Prefabs")]
     public WordObject wordObject;
 
     float wordSpawnDelay = 5;//Words spawn delay

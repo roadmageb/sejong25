@@ -17,11 +17,6 @@ public class TextInputField : MonoBehaviour
     bool isBackspacePressed = false; //Is backskpace is pressed
     float previousRemovedTime = -1, removeDiff = 1; //Time diff of removing
 
-    public void CreateTextInputField(Callback _enterCallback)
-    {
-        EnterCallback = _enterCallback;
-        return;
-    }
 
     char CombinedWord(char a, char b) //Combine if vowel or consonant is combinable or return 0
     {
@@ -57,7 +52,7 @@ public class TextInputField : MonoBehaviour
         }
         char first = '0', middle = '0', last = '0';
         char lastFirst = '0', lastMiddle = '0', lastLast = '0';
-        if(fixedInput.Count > 0)
+        if (fixedInput.Count > 0)
         {
             if (IsVowel(fixedInput[0])) middle = fixedInput[0];
             else first = fixedInput[0];
@@ -74,10 +69,18 @@ public class TextInputField : MonoBehaviour
 
                             switch (last)
                             {
-                                case 'ㄳ': last = 'ㄱ'; tempFirst = 'ㅅ'; break; case 'ㄵ': last = 'ㄴ'; tempFirst = 'ㅈ'; break; case 'ㄶ': last = 'ㄴ'; tempFirst = 'ㅎ'; break; 
-                                case 'ㄺ': last = 'ㄹ'; tempFirst = 'ㄱ'; break; case 'ㄻ': last = 'ㄹ'; tempFirst = 'ㅁ'; break; case 'ㄼ': last = 'ㄹ'; tempFirst = 'ㅂ'; break; 
-                                case 'ㄽ': last = 'ㄹ'; tempFirst = 'ㅅ'; break; case 'ㄾ': last = 'ㄹ'; tempFirst = 'ㅌ'; break; case 'ㄿ': last = 'ㄹ'; tempFirst = 'ㅍ'; break; 
-                                case 'ㅀ': last = 'ㄹ'; tempFirst = 'ㅎ'; break; case 'ㅄ': last = 'ㅂ'; tempFirst = 'ㅅ'; break; default: last = '0';  break;
+                                case 'ㄳ': last = 'ㄱ'; tempFirst = 'ㅅ'; break;
+                                case 'ㄵ': last = 'ㄴ'; tempFirst = 'ㅈ'; break;
+                                case 'ㄶ': last = 'ㄴ'; tempFirst = 'ㅎ'; break;
+                                case 'ㄺ': last = 'ㄹ'; tempFirst = 'ㄱ'; break;
+                                case 'ㄻ': last = 'ㄹ'; tempFirst = 'ㅁ'; break;
+                                case 'ㄼ': last = 'ㄹ'; tempFirst = 'ㅂ'; break;
+                                case 'ㄽ': last = 'ㄹ'; tempFirst = 'ㅅ'; break;
+                                case 'ㄾ': last = 'ㄹ'; tempFirst = 'ㅌ'; break;
+                                case 'ㄿ': last = 'ㄹ'; tempFirst = 'ㅍ'; break;
+                                case 'ㅀ': last = 'ㄹ'; tempFirst = 'ㅎ'; break;
+                                case 'ㅄ': last = 'ㅂ'; tempFirst = 'ㅅ'; break;
+                                default: last = '0'; break;
                             }
                             combinedInput += WordProcessor.CombineWord(first, middle, last);
                             lastFirst = first; lastMiddle = middle; lastLast = last;
@@ -113,15 +116,20 @@ public class TextInputField : MonoBehaviour
                 lastFirst = first; lastMiddle = middle; lastLast = last;
             }
         }
+        /*if (combinedInput.Length > 6 && rawInput.Count == 0) combinedInput = combinedInput.Substring(0, 5);
+        else
+        {
+
+        }*/
+
         rawInput.Clear();
         if (lastFirst != '0') rawInput.Add(lastFirst);
         if (lastMiddle != '0') rawInput.Add(lastMiddle);
-        if (lastLast != '0')
-        {
-            rawInput.Add(lastLast);
-        }
+        if (lastLast != '0') rawInput.Add(lastLast);
         inputText.text = combinedInput;
     }
+
+    public void SetCallback(Callback _callback) { EnterCallback = _callback; }
 
     // Update is called once per frame
     void Update()
@@ -194,5 +202,9 @@ public class TextInputField : MonoBehaviour
             CombineInput(tempWord);
             tempWord = '0';
         }
+    }
+    void LateUpdate()
+    {
+        WordSpace.inst.koreanInput = combinedInput;
     }
 }
