@@ -7,6 +7,7 @@ public class TextInputField : MonoBehaviour
 {
     public delegate void Callback();
     private Callback EnterCallback = null;
+    public int maxInput;
 
     public TextMesh inputText;
     char tempWord = '0'; //Character of input
@@ -38,7 +39,8 @@ public class TextInputField : MonoBehaviour
     void CombineInput(char newInput = '0') //Combine raw input to combined Korean text
     {
         List<char> fixedInput = new List<char>();
-        if (combinedInput.Length > 0 && rawInput.Count > 0) combinedInput = combinedInput.Substring(0, combinedInput.Length - 1);
+        string temp = combinedInput;
+        if (temp.Length > 0 && rawInput.Count > 0) temp = temp.Substring(0, temp.Length - 1);
         if (newInput != '0') rawInput.Add(newInput);
 
         for (int i = 0; i < rawInput.Count; i++)
@@ -82,7 +84,7 @@ public class TextInputField : MonoBehaviour
                                 case 'ㅄ': last = 'ㅂ'; tempFirst = 'ㅅ'; break;
                                 default: last = '0'; break;
                             }
-                            combinedInput += WordProcessor.CombineWord(first, middle, last);
+                            temp += WordProcessor.CombineWord(first, middle, last);
                             lastFirst = first; lastMiddle = middle; lastLast = last;
                             first = middle = last = '0';
                             first = tempFirst == '0' ? fixedInput[i - 1] : tempFirst;
@@ -92,7 +94,7 @@ public class TextInputField : MonoBehaviour
                     }
                     else
                     {
-                        combinedInput += WordProcessor.CombineWord(first, middle, last);
+                        temp += WordProcessor.CombineWord(first, middle, last);
                         lastFirst = first; lastMiddle = middle; lastLast = last;
                         first = middle = last = '0';
                         middle = fixedInput[i];
@@ -103,7 +105,7 @@ public class TextInputField : MonoBehaviour
                     if (IsVowel(fixedInput[i - 1])) last = fixedInput[i];
                     else
                     {
-                        combinedInput += WordProcessor.CombineWord(first, middle, last);
+                        temp += WordProcessor.CombineWord(first, middle, last);
                         lastFirst = first; lastMiddle = middle; lastLast = last;
                         first = middle = last = '0';
                         first = fixedInput[i];
@@ -112,21 +114,20 @@ public class TextInputField : MonoBehaviour
             }
             if (first != '0' || middle != '0' || last != '0')
             {
-                combinedInput += WordProcessor.CombineWord(first, middle, last);
+                temp += WordProcessor.CombineWord(first, middle, last);
                 lastFirst = first; lastMiddle = middle; lastLast = last;
             }
         }
-        /*if (combinedInput.Length > 6 && rawInput.Count == 0) combinedInput = combinedInput.Substring(0, 5);
-        else
+        if (temp.Length > maxInput)
         {
-
-        }*/
-
+            rawInput.RemoveAt(rawInput.Count - 1);
+            return;
+        }
         rawInput.Clear();
         if (lastFirst != '0') rawInput.Add(lastFirst);
         if (lastMiddle != '0') rawInput.Add(lastMiddle);
         if (lastLast != '0') rawInput.Add(lastLast);
-        inputText.text = combinedInput;
+        inputText.text = combinedInput = temp;
     }
 
     public void SetCallback(Callback _callback) { EnterCallback = _callback; }

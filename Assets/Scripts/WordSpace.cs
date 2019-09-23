@@ -43,11 +43,12 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         }
     }
 
-    public void CreateTextInputField(TextInputField.Callback _enterCallback, Vector2 pos)
+    public void CreateTextInputField(TextInputField.Callback _enterCallback, Vector2 pos, int _maxInput)
     {
         TextInputField temp = Instantiate(textInputField);
         temp.transform.position = pos;
         temp.SetCallback(_enterCallback);
+        temp.maxInput = _maxInput;
         currentInput = temp;
     }
 
