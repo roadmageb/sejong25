@@ -9,9 +9,6 @@ public class WordSpawner : MonoBehaviour
 
     float lastWordCreatedTime;
 
-    //Positions of initial word object, temporal value
-    float minX = -3, maxX = 3, initialY = 5;
-
     int GetRandomGrade()
     {
         int randomGrade;
@@ -23,14 +20,40 @@ public class WordSpawner : MonoBehaviour
         return randomGrade;
     }
 
+    WordObject CreateNormal(int wordgrade)
+    {
+        WordObject temp = Instantiate(wordObject);
+        temp.Initiate(WordSpace.inst.stringWords[wordgrade][Random.Range(0, WordSpace.inst.stringWords[wordgrade].Count)]);
+        return temp;
+    }
+
+    WordObject CreateName(string nameText)
+    {
+        WordObject temp = Instantiate(wordObject);
+        temp.Initiate(nameText);
+        return temp;
+    }
+
+    WordObject CreateAttack(string attackText)
+    {
+        return null;
+    }
+
+    WordObject CreateItem(ItemType itemType)
+    {
+        return null;
+    }
+
+    
+
     // Start is called before the first frame update
     void Start()
     {
-        Instantiate(wordObject).Initiate(3, new Vector2(Random.Range(minX, maxX), initialY));
-        Instantiate(wordObject).Initiate(3, new Vector2(Random.Range(minX, maxX), initialY));
-        Instantiate(wordObject).Initiate(2, new Vector2(Random.Range(minX, maxX), initialY));
-        Instantiate(wordObject).Initiate(2, new Vector2(Random.Range(minX, maxX), initialY));
-        Instantiate(wordObject).Initiate(1, new Vector2(Random.Range(minX, maxX), initialY));
+        CreateNormal(3);
+        CreateNormal(3);
+        CreateNormal(2);
+        CreateNormal(2);
+        CreateNormal(1);
         lastWordCreatedTime = Time.time;
     }
 
@@ -41,7 +64,7 @@ public class WordSpawner : MonoBehaviour
         {
             if ((WordSpace.inst.words.Count < 5) || (Time.time - lastWordCreatedTime > PhaseInfo.WordSpawnDelay(WordSpace.inst.currentPhase)))
             {
-                Instantiate(wordObject).Initiate(GetRandomGrade(), new Vector2(Random.Range(minX, maxX), initialY));
+                CreateNormal(GetRandomGrade());
                 lastWordCreatedTime = Time.time;
             }
         }

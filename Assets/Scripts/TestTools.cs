@@ -5,16 +5,8 @@ using UnityEngine.UI;
 
 public class TestTools : MonoBehaviour
 {
-    public InputField inputField;
     public Text brainWeightText;
     public Text playerTypingText;
-
-    public void RemoveWord()
-    {
-        WordSpace.inst.RemoveWord(inputField.text);
-        inputField.text = "";
-        inputField.ActivateInputField();
-    }
 
     // Start is called before the first frame update
     void Start()

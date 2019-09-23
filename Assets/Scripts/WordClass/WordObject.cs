@@ -4,33 +4,27 @@ using UnityEngine;
 
 public class WordObject : MonoBehaviour
 {
+    //Positions of initial word object, temporal value
+    float minX = -3, maxX = 3, initialY = 5;
     public string wordText = null; //Text of this word object
-    public int wordGrade, wordWeight;
+    public int wordGrade;
+    public float wordWeight;
 
     public TextMesh textMesh; //Text field(text mesh) of this word object
-
-    /// <summary>
-    /// Create word object by word grade
-    /// </summary>
-    /// <param name="_wordGrade">Grade of the word object</param>
-    /// <param name="pos">Initial position of the word object</param>
-    public virtual void Initiate(int _wordGrade, Vector2 pos)
-    {
-        Initiate(WordSpace.inst.stringWords[_wordGrade][Random.Range(0, WordSpace.inst.stringWords[_wordGrade].Count)], pos);
-    }
 
     /// <summary>
     /// Create word object by text
     /// </summary>
     /// <param name="_wordText">Text of the word object</param>
     /// <param name="pos">Initial position of the word object</param>
-    public virtual void Initiate(string _wordText, Vector2 pos)
+    public virtual void Initiate(string _wordText)
     {
         wordText = _wordText;
         wordGrade = WordProcessor.GetWordGrade(wordText);
         textMesh.text = wordText;
-        transform.position = pos;
+        transform.position = new Vector2(Random.Range(minX, maxX), initialY);
         wordWeight = wordGrade == 3 ? 3 : wordGrade == 2 ? 5 : wordGrade == 1 ? 7 : 10;
+        wordWeight *= WordProcessor.GetWordTyping(PlayerData.hopaeName) <= 9 ? 1 : 1 + (WordProcessor.GetWordTyping(PlayerData.hopaeName) - 9) * 0.1f;
         GetComponent<SpriteRenderer>().sprite = WordSpace.inst.wordBackgrounds[wordGrade, wordText.Length - 2];
         gameObject.AddComponent<PolygonCollider2D>();
         WordSpace.inst.brainWeight += wordWeight;
@@ -51,13 +45,17 @@ public class WordObject : MonoBehaviour
         else if (transform.eulerAngles.z < 330 && transform.eulerAngles.z > 180) transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, -30);
     }
 }
-
-public class NameObject : WordObject
+public class NormalWord : WordObject
 {
 
-    public override void Initiate(string _wordText, Vector2 pos)
+}
+
+public class NameWord : WordObject
+{
+
+    public override void Initiate(string _wordText)
     {
-        base.Initiate(_wordText, pos);
+        base.Initiate(_wordText);
         wordWeight = 0;
 
     }

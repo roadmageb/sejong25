@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerData : MonoBehaviour
+public class PlayerData
 {
-    string _userName = "홍길동"; //Name of this player
-    public string UserName { get => _userName; set => _userName = value; }
+    public static string hopaeName = "홍길동"; //Name of this player
 
-
-    int _userID = 12345;
-    public int UserID { get => _userID; }
+    public static int userID = 12345;
 
 }
