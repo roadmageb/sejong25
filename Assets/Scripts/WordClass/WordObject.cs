@@ -27,7 +27,7 @@ public class WordObject : MonoBehaviour
     public virtual void Initiate(string _wordText, Vector2 pos)
     {
         wordText = _wordText;
-        wordGrade = WordReader.GetWordGrade(wordText);
+        wordGrade = WordProcessor.GetWordGrade(wordText);
         textMesh.text = wordText;
         transform.position = pos;
         wordWeight = wordGrade == 3 ? 3 : wordGrade == 2 ? 5 : wordGrade == 1 ? 7 : 10;
@@ -39,7 +39,7 @@ public class WordObject : MonoBehaviour
 
     public virtual void Destroy()
     {
-        WordSpace.inst.totalTyping += (WordReader.GetWordTyping(wordText) + 1);
+        WordSpace.inst.totalTyping += (WordProcessor.GetWordTyping(wordText) + 1);
         WordSpace.inst.words.Remove(this);
         WordSpace.inst.brainWeight -= wordWeight;
         Destroy(gameObject);

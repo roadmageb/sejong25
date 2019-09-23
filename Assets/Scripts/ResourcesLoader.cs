@@ -20,7 +20,7 @@ public class ResourcesLoader : MonoBehaviour
         for (int i = 0; i < data.Count; i++)
         {
             var text = data[i]["Text"].ToString();
-            switch (WordReader.GetWordGrade(text))
+            switch (WordProcessor.GetWordGrade(text))
             {
                 case 0: WordSpace.inst.stringWords[0].Add(text); break;
                 case 1: WordSpace.inst.stringWords[1].Add(text); break;
