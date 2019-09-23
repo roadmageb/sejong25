@@ -19,14 +19,13 @@ public class WordObject : MonoBehaviour
     /// <param name="pos">Initial position of the word object</param>
     public virtual void Initiate(string _wordText)
     {
+        textMesh = transform.Find("WordText").GetComponent<TextMesh>();
         wordText = _wordText;
         wordGrade = WordProcessor.GetWordGrade(wordText);
         textMesh.text = wordText;
         transform.position = new Vector2(Random.Range(minX, maxX), initialY);
         wordWeight = wordGrade == 3 ? 3 : wordGrade == 2 ? 5 : wordGrade == 1 ? 7 : 10;
-        wordWeight *= WordProcessor.GetWordTyping(PlayerData.hopaeName) <= 9 ? 1 : 1 + (WordProcessor.GetWordTyping(PlayerData.hopaeName) - 9) * 0.1f;
-        GetComponent<SpriteRenderer>().sprite = WordSpace.inst.wordBackgrounds[wordGrade, wordText.Length - 2];
-        gameObject.AddComponent<PolygonCollider2D>();
+        wordWeight *= WordProcessor.GetWordTyping(GameData.hopaeName) <= 9 ? 1 : 1 + (WordProcessor.GetWordTyping(GameData.hopaeName) - 9) * 0.1f;
         WordSpace.inst.brainWeight += wordWeight;
         WordSpace.inst.words.Add(this);
     }
@@ -36,7 +35,6 @@ public class WordObject : MonoBehaviour
         WordSpace.inst.totalTyping += (WordProcessor.GetWordTyping(wordText) + 1);
         WordSpace.inst.words.Remove(this);
         WordSpace.inst.brainWeight -= wordWeight;
-        Destroy(gameObject);
     }
 
     private void LateUpdate()
@@ -47,7 +45,18 @@ public class WordObject : MonoBehaviour
 }
 public class NormalWord : WordObject
 {
+    public override void Initiate(string _wordText)
+    {
+        base.Initiate(_wordText);
+        GetComponent<SpriteRenderer>().sprite = WordSpace.inst.wordBackgrounds[wordGrade, wordText.Length - 2];
+        gameObject.AddComponent<PolygonCollider2D>();
+    }
 
+    public override void Destroy()
+    {
+        base.Destroy();
+        Destroy(gameObject);
+    }
 }
 
 public class NameWord : WordObject
@@ -57,6 +66,18 @@ public class NameWord : WordObject
     {
         base.Initiate(_wordText);
         wordWeight = 0;
+        GetComponent<SpriteRenderer>().sprite = WordSpace.inst.hopaeBackgrounds[wordText.Length - 2];
+        gameObject.AddComponent<PolygonCollider2D>();
+        textMesh.transform.position += new Vector3(0.1f, 0);
+        textMesh.color = new Color(1, 1, 1);
+    }
 
+    public override void Destroy()
+    {
+        WordSpace.inst.nameWords.Add(this);
+        GetComponent<PolygonCollider2D>().enabled = false;
+        Destroy(GetComponent<Rigidbody2D>());
+        transform.position = new Vector3(-8, 2.5f - WordSpace.inst.nameWords.Count * 0.5f, 0);
+        base.Destroy();
     }
 }

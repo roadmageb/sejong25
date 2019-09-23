@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WordSpawner : MonoBehaviour
+public class WordSpawner : SingletonBehaviour<WordSpawner>
 {
     [Header("Prefabs")]
-    public WordObject wordObject;
+    public GameObject wordObject;
 
-    float lastWordCreatedTime;
+    public float lastNormalWordCreated, lastNameWordCreated;
 
     int GetRandomGrade()
     {
@@ -22,14 +22,14 @@ public class WordSpawner : MonoBehaviour
 
     WordObject CreateNormal(int wordgrade)
     {
-        WordObject temp = Instantiate(wordObject);
+        NormalWord temp = Instantiate(wordObject).gameObject.AddComponent<NormalWord>();
         temp.Initiate(WordSpace.inst.stringWords[wordgrade][Random.Range(0, WordSpace.inst.stringWords[wordgrade].Count)]);
         return temp;
     }
 
     WordObject CreateName(string nameText)
     {
-        WordObject temp = Instantiate(wordObject);
+        NameWord temp = Instantiate(wordObject).gameObject.AddComponent<NameWord>();
         temp.Initiate(nameText);
         return temp;
     }
@@ -54,7 +54,8 @@ public class WordSpawner : MonoBehaviour
         CreateNormal(2);
         CreateNormal(2);
         CreateNormal(1);
-        lastWordCreatedTime = Time.time;
+        lastNormalWordCreated = Time.time;
+        lastNameWordCreated = Time.time;
     }
 
     // Update is called once per frame
@@ -62,10 +63,16 @@ public class WordSpawner : MonoBehaviour
     {
         if(!WordSpace.inst.isGameOver)
         {
-            if ((WordSpace.inst.words.Count < 5) || (Time.time - lastWordCreatedTime > PhaseInfo.WordSpawnDelay(WordSpace.inst.currentPhase)))
+            if ((WordSpace.inst.words.Count < 5) || (Time.time - lastNormalWordCreated > PhaseInfo.WordSpawnDelay(WordSpace.inst.currentPhase)))
             {
                 CreateNormal(GetRandomGrade());
-                lastWordCreatedTime = Time.time;
+                lastNormalWordCreated = Time.time;
+            }
+            if (Time.time - lastNameWordCreated > PhaseInfo.NameSpawnDelay(WordSpace.inst.currentPhase))
+            {
+                //For test
+                CreateName(GameData.hopaeName);
+                lastNameWordCreated = Time.time;
             }
         }
     }

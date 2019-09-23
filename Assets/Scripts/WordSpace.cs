@@ -8,6 +8,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     public TextInputField textInputField;
     [Header("Instances")]
     public List<WordObject> words;
+    public List<NameWord> nameWords;
     public TextInputField currentInput;
 
     public List<string>[] stringWords;
@@ -39,9 +40,12 @@ public class WordSpace : SingletonBehaviour<WordSpace>
             if (child.wordText == wordText)
             {
                 child.Destroy();
+                WordSpawner.inst.lastNameWordCreated -= PhaseInfo.NameSpawnReduce(currentPhase);
                 return;
             }
         }
+
+        //Check edit distance
     }
 
     public void CreateTextInputField(TextInputField.Callback _enterCallback, Vector2 pos)
@@ -76,6 +80,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     void Awake()
     {
         words = new List<WordObject>();
+        nameWords = new List<NameWord>();
         wordBackgrounds = new Sprite[4, 5];
         hopaeBackgrounds = new Sprite[6];
         stringWords = new List<string>[4];

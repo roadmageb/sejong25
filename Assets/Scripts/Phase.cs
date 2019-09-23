@@ -39,7 +39,7 @@ public class PhaseInfo
     {
         switch (phase)
         {
-            case PhaseEnum.Start: return 15;
+            case PhaseEnum.Start: return 1;
             case PhaseEnum.Main: return 12;
             case PhaseEnum.Finale: return 8;
             default: return 0;

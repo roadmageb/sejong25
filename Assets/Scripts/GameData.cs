@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerData
+public class GameData
 {
     public static string hopaeName = "홍길동"; //Name of this player
 
