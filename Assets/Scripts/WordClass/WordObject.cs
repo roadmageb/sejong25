@@ -14,7 +14,7 @@ public class WordObject : MonoBehaviour
     /// </summary>
     /// <param name="_wordGrade">Grade of the word object</param>
     /// <param name="pos">Initial position of the word object</param>
-    public void Initiate(int _wordGrade, Vector2 pos)
+    public virtual void Initiate(int _wordGrade, Vector2 pos)
     {
         Initiate(WordSpace.inst.stringWords[_wordGrade][Random.Range(0, WordSpace.inst.stringWords[_wordGrade].Count)], pos);
     }
@@ -24,7 +24,7 @@ public class WordObject : MonoBehaviour
     /// </summary>
     /// <param name="_wordText">Text of the word object</param>
     /// <param name="pos">Initial position of the word object</param>
-    public void Initiate(string _wordText, Vector2 pos)
+    public virtual void Initiate(string _wordText, Vector2 pos)
     {
         wordText = _wordText;
         wordGrade = WordReader.GetWordGrade(wordText);
@@ -37,9 +37,28 @@ public class WordObject : MonoBehaviour
         WordSpace.inst.words.Add(this);
     }
 
+    public virtual void Destroy()
+    {
+        WordSpace.inst.totalTyping += (WordReader.GetWordTyping(wordText) + 1);
+        WordSpace.inst.words.Remove(this);
+        WordSpace.inst.brainWeight -= wordWeight;
+        Destroy(gameObject);
+    }
+
     private void LateUpdate()
     {
         if (transform.eulerAngles.z > 30 && transform.eulerAngles.z < 180) transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 30);
         else if (transform.eulerAngles.z < 330 && transform.eulerAngles.z > 180) transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, -30);
+    }
+}
+
+public class NameObject : WordObject
+{
+
+    public override void Initiate(string _wordText, Vector2 pos)
+    {
+        base.Initiate(_wordText, pos);
+        wordWeight = 0;
+
     }
 }

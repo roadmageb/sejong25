@@ -11,6 +11,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     public int maximumWeight = 200; //Max weight of brain
 
     public Sprite[,] wordBackgrounds; //Sprites of word background
+    public Sprite[] hopaeBackgrounds; //Sprites of hopae background
 
     public bool isGameOver = false;
 
@@ -22,17 +23,17 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     public float playerTypingRate = 0;
     public PhaseEnum currentPhase; //Information of current phase.
 
-
+    /// <summary>
+    /// Find and remove word
+    /// </summary>
+    /// <param name="wordText">Text to remove</param>
     public void RemoveWord(string wordText)
     {
         foreach (WordObject child in words)
         {
             if (child.wordText == wordText)
             {
-                totalTyping += (WordReader.GetWordTyping(child.wordText) + 1);
-                words.Remove(child);
-                brainWeight -= child.wordWeight;
-                Destroy(child.gameObject);
+                child.Destroy();
                 return;
             }
         }
@@ -63,6 +64,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     {
         words = new List<WordObject>();
         wordBackgrounds = new Sprite[4, 5];
+        hopaeBackgrounds = new Sprite[6];
         stringWords = new List<string>[4];
         for (int i = 0; i < 4; i++) stringWords[i] = new List<string>();
         currentPhase = PhaseEnum.Start;
