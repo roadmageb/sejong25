@@ -19,10 +19,20 @@ server.listen(80, function() {
 io.on("connection", function(socket) {
     console.log("someone login");
 
+    // connection test
     socket.on("myPing", function(data) {
         socket.emit("myPong", { hello: "Hello Client!" });
     });
     socket.on("myPong", function(data) {
         console.log("PING PONG Done", data);
+    });
+
+    // enter room
+    socket.on('enterRoom', function(data) {
+
+    });
+
+    socket.on('defeat', function(data){
+
     });
 });
