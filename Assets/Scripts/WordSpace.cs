@@ -43,6 +43,12 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         }
     }
 
+    /// <summary>
+    /// Create text input field
+    /// </summary>
+    /// <param name="_enterCallback">Callback when pressed enter key</param>
+    /// <param name="pos">Position of the text field</param>
+    /// <param name="_maxInput">Maximum allowed input</param>
     public void CreateTextInputField(TextInputField.Callback _enterCallback, Vector2 pos, int _maxInput)
     {
         TextInputField temp = Instantiate(textInputField);
@@ -86,7 +92,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     // Start is called before the first frame update
     void Start()
     {
-        CreateTextInputField(() => { RemoveWord(koreanInput); }, new Vector2(0, -4));
+        CreateTextInputField(() => { RemoveWord(koreanInput); }, new Vector2(0, -4), 6);
     }
 
     // Update is called once per frame

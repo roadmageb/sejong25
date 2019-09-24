@@ -33,6 +33,20 @@ public class TextInputField : MonoBehaviour
             default: return '0';
         }
     }
+    
+    char DivideWord(char a) //Divide if vowel or consonant is dividable or return original word
+    {
+        switch (a)
+        {
+            case 'ㅘ': return 'ㅗ'; case 'ㅙ': return 'ㅙ'; case 'ㅚ': return 'ㅗ';
+            case 'ㅝ': return 'ㅜ'; case 'ㅞ': return 'ㅜ'; case 'ㅟ': return 'ㅜ';
+            case 'ㅢ': return 'ㅡ'; case 'ㄳ': return 'ㄱ'; case 'ㄵ': return 'ㄴ';
+            case 'ㄶ': return 'ㄴ'; case 'ㄺ': return 'ㄹ'; case 'ㄻ': return 'ㄹ';
+            case 'ㄼ': return 'ㄹ'; case 'ㄽ': return 'ㄹ'; case 'ㄾ': return 'ㄹ';
+            case 'ㄿ': return 'ㄹ'; case 'ㅀ': return 'ㄹ'; case 'ㅄ': return 'ㅂ';
+            default: return a;
+        }
+    }
 
     bool IsVowel(char a) { return a >= 'ㅏ' && a <= 'ㅣ'; } //True for vowel, false for consonant
 
@@ -165,7 +179,8 @@ public class TextInputField : MonoBehaviour
                 }
                 else
                 {
-                    rawInput.RemoveAt(rawInput.Count - 1);
+                    if (rawInput[rawInput.Count - 1] != DivideWord(rawInput[rawInput.Count - 1])) rawInput[rawInput.Count - 1] = DivideWord(rawInput[rawInput.Count - 1]);
+                    else rawInput.RemoveAt(rawInput.Count - 1);
                     if (rawInput.Count == 0)
                     {
                         combinedInput = combinedInput.Substring(0, combinedInput.Length - 1);
