@@ -30,6 +30,8 @@ public class WordSpace : SingletonBehaviour<WordSpace>
 
     public void RemoveWord(string wordText)
     {
+        float minEditDistance = WordProcessor.GetWordTyping(wordText) / 2;
+        WordObject missWord = null;
         foreach (WordObject child in words)
         {
             if (child.wordText == wordText)
@@ -40,6 +42,20 @@ public class WordSpace : SingletonBehaviour<WordSpace>
                 Destroy(child.gameObject);
                 return;
             }
+            else
+            {
+                int editDistance = WordProcessor.GetEditDistance(child.wordText, wordText);
+                if (editDistance <= minEditDistance)
+                {
+                    minEditDistance = editDistance;
+                    missWord = child;
+                }
+            }
+        }
+        if(missWord != null)
+        {
+            //For test, do word miss reaction
+            Debug.Log("Missed word " + missWord.wordText);
         }
     }
 
