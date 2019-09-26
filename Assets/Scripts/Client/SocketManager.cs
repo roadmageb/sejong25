@@ -30,6 +30,11 @@ public class SocketManager : SingletonBehaviour<SocketManager>
         DontDestroyOnLoad(this);
 #if UNITY_EDITOR
         socket.enabled = true;
+        socket.On("data", (SocketIOEvent e) =>
+        {
+            Debug.Log("receive: " + e.data.GetField("id").str);
+            OnReceive(e.data.ToString());
+        });
 #elif UNITY_WEBGL
         _ConnectServer();
 #endif
@@ -47,7 +52,7 @@ public class SocketManager : SingletonBehaviour<SocketManager>
         SocketOn("myPong", (JObject data) =>
         {
             Debug.Log("HandShake done, Connected, " + data["hello"].ToString());
-            SocketEmit("myPong", JObject.Parse("{ res: \"Hello Server!\" }"));
+            SocketEmit("myPong", JObject.Parse("{ \"res\": \"Hello Server!\" }"));
         });
         SocketEmit("myPing", emptyObj);
     }
@@ -65,21 +70,13 @@ public class SocketManager : SingletonBehaviour<SocketManager>
 
     public void SocketOn(string id, Callback cb)
     {
-#if UNITY_EDITOR
-        socket.On("data", (SocketIOEvent e) =>
-        {
-            Debug.Log("receive: " + e.data.GetField("id").str);
-            cb(JObject.Parse(e.data.GetField("data").ToString()));
-        });
-#elif UNITY_WEBGL
         onReceieve.Add(id, cb);
-#endif
     }
 
     public void OnReceive(string value)
     {
         JObject received = JObject.Parse(value);
-        //Debug.Log(recieved["id"].ToString() + recieved["data"].ToString());
+        //Debug.Log(received["id"].ToString() + received["data"].ToString());
         onReceieve[received["id"].ToString()](JObject.Parse(received["data"].ToString()));
     }
 }
