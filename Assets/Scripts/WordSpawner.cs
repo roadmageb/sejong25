@@ -66,6 +66,11 @@ public class WordSpawner : SingletonBehaviour<WordSpawner>
             if ((WordSpace.inst.words.Count < 5) || (Time.time - lastNormalWordCreated > PhaseInfo.WordSpawnDelay(WordSpace.inst.currentPhase)))
             {
                 CreateNormal(GetRandomGrade());
+                CreateNormal(GetRandomGrade());
+                CreateNormal(GetRandomGrade());
+                CreateNormal(GetRandomGrade());
+                CreateNormal(GetRandomGrade());
+                CreateNormal(GetRandomGrade());
                 lastNormalWordCreated = Time.time;
             }
             if (Time.time - lastNameWordCreated > PhaseInfo.NameSpawnDelay(WordSpace.inst.currentPhase))

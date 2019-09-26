@@ -12,18 +12,16 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     public TextInputField currentInput;
 
     public List<string>[] stringWords;
-    public float brainWeight = 0; //Current weight of brain
-    public int maximumWeight = 200; //Max weight of brain
 
     public Sprite[,] wordBackgrounds; //Sprites of word background
     public Sprite[] hopaeBackgrounds; //Sprites of hopae background
 
     public bool isGameOver = false;
 
-    private float gameOverTime = 5; //Time to game over
-    private Coroutine gameOverTimer = null;
+    private float gameOverTime = 5, gameOverTimerStart = 5;
+    public int borderTouchingWords = 0; //Count of words touching brain border
+    private bool isGameOverTimerOn = false; //Check if game over timer is on
 
-    private bool isGameOverTimerOn = false; //Check if game over timer is on 
     public float totalTyping = 0, playerTyping = 0; //Total wordTyping / WordTyping per seconds
     public float playerTypingRate = 0;
     public PhaseEnum currentPhase; //Information of current phase.
@@ -79,21 +77,6 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         currentInput = temp;
     }
 
-    public IEnumerator GameOverTimer(float startTime)
-    {
-        isGameOverTimerOn = true;
-        while (Time.time - startTime < gameOverTime)
-        {
-            if (brainWeight <= maximumWeight)
-            {
-                isGameOverTimerOn = false;
-                StopCoroutine(gameOverTimer);
-            }
-            yield return null;
-        }
-        GameOver();
-    }
-
     void GameOver()
     {
         isGameOver = true;
@@ -105,7 +88,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
         words = new List<WordObject>();
         nameWords = new List<NameWord>();
         wordBackgrounds = new Sprite[4, 5];
-        hopaeBackgrounds = new Sprite[6];
+        hopaeBackgrounds = new Sprite[5];
         stringWords = new List<string>[4];
         for (int i = 0; i < 4; i++) stringWords[i] = new List<string>();
         currentPhase = PhaseEnum.Start;
@@ -123,7 +106,16 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     {
         if (!isGameOver)
         {
-            if (brainWeight > maximumWeight && !isGameOverTimerOn) gameOverTimer = StartCoroutine(GameOverTimer(Time.time));
+            if (borderTouchingWords != 0 && !isGameOverTimerOn)
+            {
+                isGameOverTimerOn = true;
+                gameOverTimerStart = Time.time;
+            }
+            if (borderTouchingWords == 0 && isGameOverTimerOn) isGameOverTimerOn = false;
+            if (isGameOverTimerOn && Time.time - gameOverTimerStart > gameOverTime)
+            {
+                GameOver();
+            }
             playerTyping = totalTyping / Time.time * 60;
 
             //Need to be fixed when server is done, minPlayerTyping is set to 0 and maxPlayerTyping is your playerTyping.
