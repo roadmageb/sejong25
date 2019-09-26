@@ -35,6 +35,8 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     /// <param name="wordText">Text to remove</param>
     public void RemoveWord(string wordText)
     {
+        float minEditDistance = WordProcessor.GetWordTyping(wordText) / 2;
+        WordObject missWord = null;
         foreach (WordObject child in words)
         {
             if (child.wordText == wordText)
@@ -43,16 +45,37 @@ public class WordSpace : SingletonBehaviour<WordSpace>
                 WordSpawner.inst.lastNameWordCreated -= PhaseInfo.NameSpawnReduce(currentPhase);
                 return;
             }
+            else
+            {
+                int editDistance = WordProcessor.GetEditDistance(child.wordText, wordText);
+                if (editDistance <= minEditDistance)
+                {
+                    minEditDistance = editDistance;
+                    missWord = child;
+                }
+            }
+        }
+        if(missWord != null)
+        {
+            //For test, do word miss reaction
+            Debug.Log("Missed word " + missWord.wordText);
         }
 
         //Check edit distance
     }
 
-    public void CreateTextInputField(TextInputField.Callback _enterCallback, Vector2 pos)
+    /// <summary>
+    /// Create text input field
+    /// </summary>
+    /// <param name="_enterCallback">Callback when pressed enter key</param>
+    /// <param name="pos">Position of the text field</param>
+    /// <param name="_maxInput">Maximum allowed input</param>
+    public void CreateTextInputField(TextInputField.Callback _enterCallback, Vector2 pos, int _maxInput)
     {
         TextInputField temp = Instantiate(textInputField);
         temp.transform.position = pos;
         temp.SetCallback(_enterCallback);
+        temp.maxInput = _maxInput;
         currentInput = temp;
     }
 
@@ -92,7 +115,7 @@ public class WordSpace : SingletonBehaviour<WordSpace>
     // Start is called before the first frame update
     void Start()
     {
-        CreateTextInputField(() => { RemoveWord(koreanInput); }, new Vector2(0, -4));
+        CreateTextInputField(() => { RemoveWord(koreanInput); }, new Vector2(0, -4), 6);
     }
 
     // Update is called once per frame
