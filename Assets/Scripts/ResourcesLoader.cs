@@ -9,8 +9,10 @@ public class ResourcesLoader : MonoBehaviour
     public static void LoadImages()
     {
         for (int grade = 0; grade < 4; grade++)
-            for (int length = 0; length < 5; length++)
-                WordSpace.inst.wordBackgrounds[grade, length] = Resources.Load<Sprite>("WordBackgrounds/" + grade + "_" + (length + 2));
+            for (int length = 2; length < 7; length++)
+                WordSpace.inst.wordBackgrounds[grade, length - 2] = Resources.Load<Sprite>("WordBackgrounds/" + grade + "_" + length);
+        for(int length = 2; length < 7; length++)
+            WordSpace.inst.hopaeBackgrounds[length - 2] = Resources.Load<Sprite>("hopaeBAckgrounds/name" + length);
     }
     public static void ParseCSVFile()
     {
@@ -18,7 +20,7 @@ public class ResourcesLoader : MonoBehaviour
         for (int i = 0; i < data.Count; i++)
         {
             var text = data[i]["Text"].ToString();
-            switch (WordReader.GetWordGrade(text))
+            switch (WordProcessor.GetWordGrade(text))
             {
                 case 0: WordSpace.inst.stringWords[0].Add(text); break;
                 case 1: WordSpace.inst.stringWords[1].Add(text); break;
