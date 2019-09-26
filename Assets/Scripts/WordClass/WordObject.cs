@@ -29,6 +29,12 @@ public class WordObject : MonoBehaviour
         WordSpace.inst.brainWeight += wordWeight;
         WordSpace.inst.words.Add(this);
     }
+    public virtual void SetSize()
+    {
+        gameObject.AddComponent<PolygonCollider2D>();
+        float initialSize = GetComponent<Renderer>().bounds.size.x * GetComponent<Renderer>().bounds.size.y;
+        transform.localScale *= Mathf.Sqrt(wordWeight * 0.2f / initialSize);
+    }
 
     public virtual void Destroy()
     {
@@ -49,7 +55,7 @@ public class NormalWord : WordObject
     {
         base.Initiate(_wordText);
         GetComponent<SpriteRenderer>().sprite = WordSpace.inst.wordBackgrounds[wordGrade, wordText.Length - 2];
-        gameObject.AddComponent<PolygonCollider2D>();
+        base.SetSize();
     }
 
     public override void Destroy()
@@ -67,9 +73,10 @@ public class NameWord : WordObject
         base.Initiate(_wordText);
         wordWeight = 0;
         GetComponent<SpriteRenderer>().sprite = WordSpace.inst.hopaeBackgrounds[wordText.Length - 2];
-        gameObject.AddComponent<PolygonCollider2D>();
         textMesh.transform.position += new Vector3(0.1f, 0);
         textMesh.color = new Color(1, 1, 1);
+        transform.localScale = new Vector3(0.75f, 0.75f, 1);
+        gameObject.AddComponent<PolygonCollider2D>();
     }
 
     public override void Destroy()
